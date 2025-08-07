@@ -1,4 +1,4 @@
-package com.christopoulos.pokemonexplorer
+package com.christopoulos.pokemonexplorer.presentation.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
