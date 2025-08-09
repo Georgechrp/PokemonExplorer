@@ -1,11 +1,11 @@
 package com.christopoulos.pokemonexplorer.presentation.ui.main
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.christopoulos.pokemonexplorer.presentation.ui.type_selection.TypeSelectionScreen
+import androidx.navigation.compose.rememberNavController
+import com.christopoulos.pokemonexplorer.presentation.navigation.AppNavHost
 import com.christopoulos.pokemonexplorer.ui.theme.PokemonExplorerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,14 +16,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PokemonExplorerTheme {
-                TypeSelectionScreen(
-                    onTypeSelected = { type ->
-                        // Προς το παρόν εμφανίζουμε ένα toast
-                        Toast.makeText(this, "Selected: ${type.displayName}", Toast.LENGTH_SHORT).show()
-
-                        // αργότερα θα κάνουμε navigation
-                    }
-                )
+                val navController = rememberNavController()
+                AppNavHost(navController = navController)
             }
         }
     }
