@@ -1,9 +1,6 @@
 package com.christopoulos.pokemonexplorer.presentation.navigation
 
-
-import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -12,9 +9,6 @@ import androidx.navigation.compose.composable
 import com.christopoulos.pokemonexplorer.presentation.ui.splash.SplashScreen
 import com.christopoulos.pokemonexplorer.presentation.ui.type_selection.TypeSelectionScreen
 
-/* defines the navigation graph for the app, including the splash screen and type selection screen.
-*  It uses the NavHostController to manage navigation between different screens.
-*/
 @Composable
 fun AppNavHost(
     navController: NavHostController,
@@ -29,8 +23,6 @@ fun AppNavHost(
     }
 }
 
-
-
 private fun NavGraphBuilder.splashGraph(navController: NavController) {
     composable(Destination.Splash.route) {
         SplashScreen(
@@ -43,18 +35,15 @@ private fun NavGraphBuilder.splashGraph(navController: NavController) {
 
 private fun NavGraphBuilder.typeSelectionGraph(navController: NavController) {
     composable(Destination.TypeSelection.route) {
-        val context = LocalContext.current
         TypeSelectionScreen(
-            onTypeSelected = { type ->
-                Toast.makeText(context, "Selected: ${type.displayName}", Toast.LENGTH_SHORT).show()
-            }
+            onTypeSelected = { /* Προς το παρόν δεν κάνουμε navigation. Θα προστεθεί όταν υπάρξει οθόνη TypePokemon. */ }
         )
     }
 }
 
 private fun NavController.navigateToTypeSelection() {
     navigate(Destination.TypeSelection.route) {
-        popUpTo(Destination.Splash.route) { inclusive = true } //clear back stack
+        popUpTo(Destination.Splash.route) { inclusive = true }
         launchSingleTop = true
         restoreState = true
     }

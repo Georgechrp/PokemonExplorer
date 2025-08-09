@@ -5,7 +5,6 @@ import retrofit2.http.Path
 
 // more endpoints in progress..
 interface PokeApi {
-
     // Get all pokemons from one type
     @GET("type/{type}")
     suspend fun getPokemonByType(
@@ -17,4 +16,6 @@ interface PokeApi {
     suspend fun getPokemonDetails(
         @Path("name") name: String
     ): PokemonDetailsResponse
+
+
 }

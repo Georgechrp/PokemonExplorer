@@ -7,3 +7,4 @@ data class Pokemon(
     val attack: Int,
     val defense: Int
 )
+
