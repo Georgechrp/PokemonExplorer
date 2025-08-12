@@ -1,23 +1,30 @@
 package com.christopoulos.pokemonexplorer.presentation.ui.type_selection
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.christopoulos.pokemonexplorer.domain.model.PokemonType
 import com.christopoulos.pokemonexplorer.domain.model.typeIconRes
@@ -26,26 +33,12 @@ import com.christopoulos.pokemonexplorer.domain.model.typeIconRes
 fun TypeSelectionScreen(
     onTypeSelected: (PokemonType) -> Unit
 ) {
-    var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
-    var expanded by remember { mutableStateOf(false) }
-    var selectedType by remember { mutableStateOf(PokemonType.values().first()) }
-
     Scaffold { inner ->
         TypeSelectionContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(inner),
-            searchQuery = searchQuery,
-            onSearchQueryChange = { searchQuery = it },
-            expanded = expanded,
-            onDropdownExpand = { expanded = true },
-            onDropdownDismiss = { expanded = false },
-            selectedType = selectedType,
-            onLocalTypeSelected = {
-                selectedType = it
-                expanded = false
-                onTypeSelected(it) // προς το παρόν δεν οδηγεί πουθενά (δεν γίνεται navigate)
-            }
+            onTypeSelected = onTypeSelected
         )
     }
 }
@@ -53,85 +46,71 @@ fun TypeSelectionScreen(
 @Composable
 private fun TypeSelectionContent(
     modifier: Modifier = Modifier,
-    searchQuery: TextFieldValue,
-    onSearchQueryChange: (TextFieldValue) -> Unit,
-    expanded: Boolean,
-    onDropdownExpand: () -> Unit,
-    onDropdownDismiss: () -> Unit,
-    selectedType: PokemonType,
-    onLocalTypeSelected: (PokemonType) -> Unit
+    onTypeSelected: (PokemonType) -> Unit
 ) {
+    val types = remember { PokemonType.values().toList() }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp, start = 24.dp, end = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TypeSelectionSearchBar(
-            searchQuery = searchQuery,
-            onSearchQueryChange = onSearchQueryChange,
-            expanded = expanded,
-            onDropdownExpand = onDropdownExpand,
-            onDropdownDismiss = onDropdownDismiss,
-            selectedType = selectedType,
-            onTypeSelected = onLocalTypeSelected
-        )
-        Spacer(Modifier.height(32.dp))
         Text(
-            text = "Επέλεξε τύπο για να δεις τα Pokémon του τύπου: ${selectedType.displayName}",
+            text = "Επέλεξε τύπο για να δεις τα Pokémon του τύπου",
             style = MaterialTheme.typography.titleMedium
         )
+        Spacer(Modifier.height(24.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(bottom = 32.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(types) { type ->
+                TypeCard(
+                    type = type,
+                    onClick = { onTypeSelected(type) }
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun TypeSelectionSearchBar(
-    searchQuery: TextFieldValue,
-    onSearchQueryChange: (TextFieldValue) -> Unit,
-    expanded: Boolean,
-    onDropdownExpand: () -> Unit,
-    onDropdownDismiss: () -> Unit,
-    selectedType: PokemonType,
-    onTypeSelected: (PokemonType) -> Unit
+private fun TypeCard(
+    type: PokemonType,
+    onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedTextField(
-            value = searchQuery,
-            onValueChange = onSearchQueryChange,
-            placeholder = { Text("Αναζήτηση Pokémon…") },
-            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
-            singleLine = true,
-            modifier = Modifier.weight(1f),
-            shape = RoundedCornerShape(14.dp)
+    Card(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
-        Box {
-            IconButton(onClick = onDropdownExpand) {
-                Image(
-                    painter = painterResource(id = typeIconRes(selectedType)),
-                    contentDescription = selectedType.displayName,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = onDropdownDismiss
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(horizontal = 12.dp)
             ) {
-                PokemonType.values().forEach { t ->
-                    DropdownMenuItem(
-                        text = { Text(t.displayName) },
-                        onClick = { onTypeSelected(t) },
-                        leadingIcon = {
-                            Image(
-                                painter = painterResource(id = typeIconRes(t)),
-                                contentDescription = t.displayName,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    )
-                }
+                Image(
+                    painter = painterResource(id = typeIconRes(type)),
+                    contentDescription = type.displayName,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = type.displayName,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }

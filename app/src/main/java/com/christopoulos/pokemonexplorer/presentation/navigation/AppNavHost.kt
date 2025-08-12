@@ -4,9 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.christopoulos.pokemonexplorer.presentation.ui.splash.SplashScreen
+import com.christopoulos.pokemonexplorer.presentation.ui.type_list.TypePokemonScreen
 import com.christopoulos.pokemonexplorer.presentation.ui.type_selection.TypeSelectionScreen
 
 @Composable
@@ -20,23 +23,36 @@ fun AppNavHost(
     ) {
         splashGraph(navController)
         typeSelectionGraph(navController)
+        typeListGraph(navController)
     }
 }
 
 private fun NavGraphBuilder.splashGraph(navController: NavController) {
     composable(Destination.Splash.route) {
-        SplashScreen(
-            onTimeout = {
-                navController.navigateToTypeSelection()
-            }
-        )
+        SplashScreen(onTimeout = { navController.navigateToTypeSelection() })
     }
 }
 
 private fun NavGraphBuilder.typeSelectionGraph(navController: NavController) {
     composable(Destination.TypeSelection.route) {
         TypeSelectionScreen(
-            onTypeSelected = { /* Προς το παρόν δεν κάνουμε navigation. Θα προστεθεί όταν υπάρξει οθόνη TypePokemon. */ }
+            onTypeSelected = { type ->
+                navController.navigate(Destination.typeListRoute(type.apiName))
+            }
+        )
+    }
+}
+
+private fun NavGraphBuilder.typeListGraph(navController: NavController) {
+    composable(
+        route = Destination.TypeList.route,
+        arguments = listOf(navArgument("typeName") { type = NavType.StringType })
+    ) { backStackEntry ->
+        val typeName = backStackEntry.arguments?.getString("typeName") ?: return@composable
+        TypePokemonScreen(
+            typeName = typeName,
+            onBack = { navController.popBackStack() },
+            onPokemonClick = { /* Θα το χρησιμοποιήσουμε στο επόμενο βήμα για λεπτομέρειες */ }
         )
     }
 }

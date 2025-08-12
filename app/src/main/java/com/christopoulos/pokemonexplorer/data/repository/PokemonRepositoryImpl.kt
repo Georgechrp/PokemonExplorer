@@ -9,7 +9,8 @@ class PokemonRepositoryImpl(
 
     override suspend fun getPokemonListByType(type: String, offset: Int, limit: Int): List<Pokemon> {
         // API call
-        val response = api.getPokemonByType(type)
+        val normalizedType = type.trim().lowercase()
+        val response = api.getPokemonByType(normalizedType)
 
         // get Pokémon names
         val allPokemonNames = response.pokemon.map { it.pokemon.name }
@@ -19,6 +20,7 @@ class PokemonRepositoryImpl(
 
         //for every name, get details
         return pagedNames.map { name ->
+            val normalizedName = name.trim().lowercase()
             val details = api.getPokemonDetails(name)
             // Mapping σε domain model
             Pokemon(
@@ -32,7 +34,8 @@ class PokemonRepositoryImpl(
     }
 
     override suspend fun getPokemonDetails(name: String): Pokemon {
-        val details = api.getPokemonDetails(name)
+        val normalizedName = name.trim().lowercase()
+        val details = api.getPokemonDetails(normalizedName)
         return Pokemon(
             name = details.name,
             imageUrl = details.sprites.front_default,

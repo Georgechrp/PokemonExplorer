@@ -1,29 +1,23 @@
 package com.christopoulos.pokemonexplorer.domain.model
 
 import com.christopoulos.pokemonexplorer.R
-import com.christopoulos.pokemonexplorer.domain.model.PokemonType
 
-
-enum class PokemonType(val displayName: String) {
-    NORMAL("Normal"),
-    FIRE("Fire"),
-    WATER("Water"),
-    ELECTRIC("Electric"),
-    GRASS("Grass"),
-    ICE("Ice"),
-    FIGHTING("Fighting"),
-    POISON("Poison"),
-    GROUND("Ground"),
-    FLYING("Flying");
+enum class PokemonType(val displayName: String, val apiName: String) {
+    NORMAL("Normal", "normal"),
+    FIRE("Fire", "fire"),
+    WATER("Water", "water"),
+    GRASS("Grass", "grass"),
+    ELECTRIC("Electric", "electric"),
+    ICE("Ice", "ice"),
+    FIGHTING("Fighting", "fighting"),
+    POISON("Poison", "poison"),
+    GROUND("Ground", "ground"),
+    FLYING("Flying", "flying");
 
     companion object {
-        val default10 = listOf(
-            NORMAL, FIRE, WATER, ELECTRIC, GRASS,
-            ICE, FIGHTING, POISON, GROUND, FLYING
-        )
+        val default10 = listOf(NORMAL, FIRE, WATER, GRASS, ELECTRIC, ICE, FIGHTING, POISON, GROUND, FLYING)
     }
 }
-
 
 
 fun typeIconRes(type: PokemonType): Int = when (type) {
