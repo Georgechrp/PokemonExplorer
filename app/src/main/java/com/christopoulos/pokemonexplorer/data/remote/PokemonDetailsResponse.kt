@@ -7,7 +7,7 @@ data class PokemonDetailsResponse(
 )
 
 data class Sprites(
-    val front_default: String
+    val front_default: String?
 )
 
 data class Stat(

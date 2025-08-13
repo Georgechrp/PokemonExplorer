@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.christopoulos.pokemonexplorer.presentation.ui.splash.SplashScreen
 import com.christopoulos.pokemonexplorer.presentation.ui.type_list.TypePokemonScreen
 import com.christopoulos.pokemonexplorer.presentation.ui.type_selection.TypeSelectionScreen
+import com.christopoulos.pokemonexplorer.presentation.ui.pokemon_details.PokemonDetailsScreen
 
 @Composable
 fun AppNavHost(
@@ -24,6 +25,7 @@ fun AppNavHost(
         splashGraph(navController)
         typeSelectionGraph(navController)
         typeListGraph(navController)
+        detailsGraph(navController)
     }
 }
 
@@ -52,7 +54,20 @@ private fun NavGraphBuilder.typeListGraph(navController: NavController) {
         TypePokemonScreen(
             typeName = typeName,
             onBack = { navController.popBackStack() },
-            onPokemonClick = { /* Θα το χρησιμοποιήσουμε στο επόμενο βήμα για λεπτομέρειες */ }
+            onPokemonClick = { pokemon ->
+                navController.navigate(Destination.detailsRoute(pokemon.name))
+            }
+        )
+    }
+}
+
+private fun NavGraphBuilder.detailsGraph(navController: NavController) {
+    composable(
+        route = Destination.Details.route,
+        arguments = listOf(navArgument("name") { type = NavType.StringType })
+    ) {
+        PokemonDetailsScreen(
+            onBack = { navController.popBackStack() }
         )
     }
 }

@@ -8,24 +8,18 @@ class PokemonRepositoryImpl(
 ) : PokemonRepository {
 
     override suspend fun getPokemonListByType(type: String, offset: Int, limit: Int): List<Pokemon> {
-        // API call
         val normalizedType = type.trim().lowercase()
         val response = api.getPokemonByType(normalizedType)
 
-        // get Pokémon names
         val allPokemonNames = response.pokemon.map { it.pokemon.name }
-
-        // pagination (offset, limit)
         val pagedNames = allPokemonNames.drop(offset).take(limit)
 
-        //for every name, get details
         return pagedNames.map { name ->
             val normalizedName = name.trim().lowercase()
-            val details = api.getPokemonDetails(name)
-            // Mapping σε domain model
+            val details = api.getPokemonDetails(normalizedName)
             Pokemon(
                 name = details.name,
-                imageUrl = details.sprites.front_default,
+                imageUrl = details.sprites.front_default ?: "", // fallback αντί για crash
                 hp = details.stats.firstOrNull { it.stat.name == "hp" }?.base_stat ?: 0,
                 attack = details.stats.firstOrNull { it.stat.name == "attack" }?.base_stat ?: 0,
                 defense = details.stats.firstOrNull { it.stat.name == "defense" }?.base_stat ?: 0
@@ -38,7 +32,7 @@ class PokemonRepositoryImpl(
         val details = api.getPokemonDetails(normalizedName)
         return Pokemon(
             name = details.name,
-            imageUrl = details.sprites.front_default,
+            imageUrl = details.sprites.front_default ?: "",
             hp = details.stats.firstOrNull { it.stat.name == "hp" }?.base_stat ?: 0,
             attack = details.stats.firstOrNull { it.stat.name == "attack" }?.base_stat ?: 0,
             defense = details.stats.firstOrNull { it.stat.name == "defense" }?.base_stat ?: 0
