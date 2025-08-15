@@ -60,15 +60,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
+    // DI
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-
+    // Network
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.gson)
-
+    // Navigation
     implementation(libs.androidx.hilt.navigation.compose)
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    //Images
     implementation("io.coil-kt:coil-compose:2.6.0")
 }
