@@ -19,7 +19,7 @@ class PokemonRepositoryImpl(
             val details = api.getPokemonDetails(normalizedName)
             Pokemon(
                 name = details.name,
-                imageUrl = details.sprites.front_default ?: "", // fallback αντί για crash
+                imageUrl = details.sprites.front_default ?: "",
                 hp = details.stats.firstOrNull { it.stat.name == "hp" }?.base_stat ?: 0,
                 attack = details.stats.firstOrNull { it.stat.name == "attack" }?.base_stat ?: 0,
                 defense = details.stats.firstOrNull { it.stat.name == "defense" }?.base_stat ?: 0

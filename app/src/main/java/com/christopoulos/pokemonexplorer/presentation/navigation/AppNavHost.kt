@@ -24,8 +24,8 @@ fun AppNavHost(
     ) {
         splashGraph(navController)
         typeSelectionGraph(navController)
-        typeListGraph(navController)
-        detailsGraph(navController)
+        pokemonSearchGraph(navController)
+        detailsPokemonGraph(navController)
     }
 }
 
@@ -45,9 +45,9 @@ private fun NavGraphBuilder.typeSelectionGraph(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.typeListGraph(navController: NavController) {
+private fun NavGraphBuilder.pokemonSearchGraph(navController: NavController) {
     composable(
-        route = Destination.TypeList.route,
+        route = Destination.TypePokemon.route,
         arguments = listOf(navArgument("typeName") { type = NavType.StringType })
     ) { backStackEntry ->
         val typeName = backStackEntry.arguments?.getString("typeName") ?: return@composable
@@ -61,7 +61,7 @@ private fun NavGraphBuilder.typeListGraph(navController: NavController) {
     }
 }
 
-private fun NavGraphBuilder.detailsGraph(navController: NavController) {
+private fun NavGraphBuilder.detailsPokemonGraph(navController: NavController) {
     composable(
         route = Destination.Details.route,
         arguments = listOf(navArgument("name") { type = NavType.StringType })
