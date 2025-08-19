@@ -3,7 +3,9 @@ package com.christopoulos.pokemonexplorer.presentation.ui.pokemon_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.christopoulos.pokemonexplorer.data.common.toAppError
 import com.christopoulos.pokemonexplorer.data.repository.PokemonRepository
+import com.christopoulos.pokemonexplorer.domain.common.AppErrorType
 import com.christopoulos.pokemonexplorer.domain.model.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 data class PokemonDetailsUiState(
     val isLoading: Boolean = true,
-    val error: String? = null,
+    val error: AppErrorType? = null,
     val pokemon: Pokemon? = null
 )
 
@@ -41,7 +43,7 @@ class PokemonDetailsViewModel @Inject constructor(
                 val details = repository.getPokemonDetails(name)
                 _uiState.update { it.copy(isLoading = false, pokemon = details) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Κάτι πήγε στραβά") }
+                _uiState.update { it.copy(isLoading = false, error = e.toAppError()) }
             }
         }
     }

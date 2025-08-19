@@ -10,12 +10,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.christopoulos.pokemonexplorer.domain.model.Pokemon
 import androidx.compose.runtime.collectAsState
+import com.christopoulos.pokemonexplorer.R
+import com.christopoulos.pokemonexplorer.presentation.common.toUserMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +33,7 @@ fun TypePokemonScreen(
     }
 
     val state by viewModel.uiState.collectAsState()
+    val ctx = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -61,7 +65,7 @@ fun TypePokemonScreen(
                     viewModel.onSearchChange(it.text)
                 },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Αναζήτηση μέσα στον τύπο…") },
+                placeholder = { Text("Search within type…") },
                 singleLine = true,
                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) }
             )
@@ -76,18 +80,22 @@ fun TypePokemonScreen(
                 }
 
                 state.error != null && state.items.isEmpty() -> {
-                    ErrorView(message = state.error ?: "Σφάλμα", onRetry = viewModel::retry)
+                    val errorMessage = state.error?.toUserMessage(ctx) ?: ctx.getString(R.string.error_unknown)
+                    ErrorView(message = errorMessage, onRetry = viewModel::retry)
                 }
 
                 state.filteredItems.isEmpty() -> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("Δεν βρέθηκαν Pokémon για την αναζήτηση.")
+                        Text("No Pokémon found for your search.")
                     }
                 }
 
                 else -> {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(state.filteredItems) { pokemon ->
+                        items(
+                            items = state.filteredItems,
+                            key = { it.name } // stable key for smoother list behavior
+                        ) { pokemon ->
                             PokemonRow(pokemon = pokemon) { onPokemonClick(pokemon) }
                             Divider()
                         }
@@ -111,7 +119,7 @@ fun TypePokemonScreen(
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
-                                        text = "Τέλος αποτελεσμάτων.",
+                                        text = "End of results.",
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }
@@ -122,7 +130,6 @@ fun TypePokemonScreen(
             }
         }
     }
-
 }
 
 @Composable
@@ -174,6 +181,6 @@ private fun ErrorView(message: String, onRetry: () -> Unit) {
     ) {
         Text(text = message, color = MaterialTheme.colorScheme.error)
         Spacer(Modifier.height(8.dp))
-        OutlinedButton(onClick = onRetry) { Text("Προσπάθησε ξανά") }
+        OutlinedButton(onClick = onRetry) { Text("Try again") }
     }
 }

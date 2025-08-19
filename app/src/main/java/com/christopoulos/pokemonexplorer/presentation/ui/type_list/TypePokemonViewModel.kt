@@ -2,7 +2,9 @@ package com.christopoulos.pokemonexplorer.presentation.ui.type_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.christopoulos.pokemonexplorer.data.common.toAppError
 import com.christopoulos.pokemonexplorer.data.repository.PokemonRepository
+import com.christopoulos.pokemonexplorer.domain.common.AppErrorType
 import com.christopoulos.pokemonexplorer.domain.model.Pokemon
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -14,7 +16,7 @@ import javax.inject.Inject
 
 data class TypeListUiState(
     val isLoading: Boolean = false,
-    val error: String? = null,
+    val error: AppErrorType? = null,
     val items: List<Pokemon> = emptyList(),
     val offset: Int = 0,
     val canLoadMore: Boolean = true,
@@ -76,7 +78,7 @@ class TypePokemonViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "Κάτι πήγε στραβά") }
+                _uiState.update { it.copy(isLoading = false, error = e.toAppError()) }
             }
         }
     }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Pokemon Explorer</string>
+    <string name="error_network">Δεν υπάρχει σύνδεση στο Internet. Ελέγξτε το δίκτυό σας και προσπαθήστε ξανά.</string>
+    <string name="error_timeout">Η σύνδεση καθυστέρησε. Δοκιμάστε ξανά σε λίγο.</string>
+    <string name="error_not_found">Δεν βρέθηκαν αποτελέσματα.</string>
+    <string name="error_server">Υπάρχει πρόβλημα με τον διακομιστή. Δοκιμάστε ξανά αργότερα.</string>
+    <string name="error_unknown">Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.</string>
 </resources>

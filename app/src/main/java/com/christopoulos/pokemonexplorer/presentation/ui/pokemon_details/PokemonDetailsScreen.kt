@@ -9,10 +9,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.christopoulos.pokemonexplorer.R
+import com.christopoulos.pokemonexplorer.presentation.common.toUserMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,6 +24,7 @@ fun PokemonDetailsScreen(
     viewModel: PokemonDetailsViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val ctx = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -49,6 +53,7 @@ fun PokemonDetailsScreen(
             }
 
             state.error != null -> {
+                val errorMessage = state.error?.toUserMessage(ctx) ?: ctx.getString(R.string.error_unknown)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -56,9 +61,9 @@ fun PokemonDetailsScreen(
                         .padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = state.error ?: "Σφάλμα", color = MaterialTheme.colorScheme.error)
+                    Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.height(12.dp))
-                    OutlinedButton(onClick = viewModel::load) { Text("Προσπάθησε ξανά") }
+                    OutlinedButton(onClick = viewModel::load) { Text("Try again") }
                 }
             }
 
