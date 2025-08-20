@@ -26,7 +26,6 @@ A sample Android app built with Kotlin, Jetpack Compose, and Clean Architecture,
 - Retrofit (network)
 - Coroutines & Flow
 - PokéAPI (https://pokeapi.co/)
-- JUnit (testing)
 
 ## Project Structure
 
@@ -38,26 +37,16 @@ com.christopoulos.pokemonexplorer
 ├── presentation
 │ └── ui
 │ └── main # MainActivity & main screen UI
-├── ui.theme # Theme, colors, typography
-└── util # Helpers, extensions
+└── ui.theme # Theme, colors, typography
 
 
 ## How to Run
 
 1. Clone the repo
-2. Open in Android Studio (Giraffe or newer recommended)
+2. Open in Android Studio 2025
 3. Build & run on an emulator or device (min SDK 24)
 4. No API key required (uses public PokéAPI)
 
-## Testing
-
-- Unit tests for ViewModels, UseCases, Repositories (see `/test`)
-- To run tests:  
-  `./gradlew test`
-
-## Screenshots
-
-*To be added after UI implementation*
 
 ## Future Improvements
 
@@ -65,11 +54,10 @@ com.christopoulos.pokemonexplorer
 - Localization (multi-language support)
 - UI polish & animations
 - More detailed Pokémon info
-- Dark mode
 
-## License
+## Presentation
 
-MIT
+ Check the presentation (includes screenshots, video, .apk file to download)  [here](https://georgioschristopoulos.info/pokemonexplorerpresentation/index.html)
 
 ---
 
